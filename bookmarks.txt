@@ -1,0 +1,9 @@
+# specific
+https://hub.docker.com/_/redis
+https://www.restapiexample.com/golang-tutorial/simple-example-uses-redis-golang/
+https://www.ionos.com/community/hosting/redis/using-redis-in-docker-containers/
+
+# environment
+https://github.com/felixrieseberg/windows-development-environment
+https://medium.com/@robzhu/setting-up-a-docker-host-on-windows-with-vagrant-37db0250190c
+https://github.com/github/gitignore/blob/master/Go.gitignore
