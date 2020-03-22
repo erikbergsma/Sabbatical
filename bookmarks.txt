@@ -1,4 +1,5 @@
 # specific
+https://gobyexample.com/values
 https://hub.docker.com/_/redis
 https://www.restapiexample.com/golang-tutorial/simple-example-uses-redis-golang/
 https://www.ionos.com/community/hosting/redis/using-redis-in-docker-containers/
