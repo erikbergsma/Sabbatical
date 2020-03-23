@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-# start basic redis on default port
-sudo sudo docker run --rm -p 6379:6379 redis
+set -x
+
+#start basic redis on default port
+echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
+sudo docker run --rm -p 6379:6379 -d redis
