@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"fmt"
+	"github.com/fatih/structs"
 	"github.com/go-redis/redis"
 )
 
@@ -16,6 +17,7 @@ var (
 	authenticated = false
 )
 
+
 func main() {
 	err := client.Set("key", "value", 0).Err()
 	if err != nil {
@@ -28,13 +30,41 @@ func main() {
 	}
 	fmt.Println("key", val)
 
+	type Server struct {
+		Name        string
+		ID          int
+		Enabled     bool
+		users       []string // not exported
+	}
+
+	server := &Server{
+		Name:    "gopher",
+		ID:      123456,
+		Enabled: true,
+	}
+
+	// Convert a struct to a map[string]interface{}
+	// => {"Name":"gopher", "ID":123456, "Enabled":true}
+	m := structs.Map(server)
+	fmt.Println("map", m)
+
+	client.HSet("customer:2", m)
+
+	val3 := client.HGetAll("customer:2" )
+	fmt.Println("key3", val3)
+
+	val4 := client.HGet("customer:2", "Name")
+	fmt.Println("key4", val4)
+
 	// route
-	http.HandleFunc("/list", listHandler)
+	//http.HandleFunc("/list", listHandler)
 	//http.HandleFunc("/create", createHandler)
 	//http.HandleFunc("/update", updateHandler)
 	//http.HandleFunc("/delete", deleteHandler)
-	http.ListenAndServe(":3333", nil)
+	//http.ListenAndServe(":3333", nil)
+
 }
+
 
 func listHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
