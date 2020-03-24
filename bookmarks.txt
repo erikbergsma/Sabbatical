@@ -1,8 +1,17 @@
-# specific
-https://gobyexample.com/values
+# docker
 https://hub.docker.com/_/redis
-https://www.restapiexample.com/golang-tutorial/simple-example-uses-redis-golang/
 https://www.ionos.com/community/hosting/redis/using-redis-in-docker-containers/
+
+#golang
+https://gobyexample.com/
+https://github.com/fatih/structs
+https://www.restapiexample.com/golang-tutorial/simple-example-uses-redis-golang/
+https://godoc.org/github.com/go-redis/redis#Client.HGet
+https://sosedoff.com/2016/07/16/golang-struct-tags.html
+https://github.com/thanhngvpt/famcost
+
+#redis
+https://www.youtube.com/watch?v=ELk_W9BBTDU
 
 # environment
 https://github.com/felixrieseberg/windows-development-environment
