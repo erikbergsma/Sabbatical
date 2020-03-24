@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"fmt"
+	"strings"
 	"github.com/fatih/structs"
 	"github.com/go-redis/redis"
 	//"reflect"
@@ -28,46 +29,41 @@ type Server struct {
 	users       []string // not exported
 }
 
-func main() {
-	server1 := &Server{
-		Name:    "gopher",
-		ID:      123456,
-		Enabled: true,
+func createServer(Name string, ID int, Enabled bool) Server {
+	return Server{
+		Name:    Name,
+		ID:      ID,
+		Enabled: Enabled,
 	}
+}
 
-	server2 := &Server{
-		Name:    "blooper",
-		ID:      78910,
-		Enabled: false,
-	}
+func serverToRedis(server Server) error {
+	m := structs.Map(server)
+	ID := strconv.Itoa(m["ID"].(int))
+	keyname := strings.Join([]string{"customer", ID}, ":")
 
-	// Convert a struct to a map[string]interface{}
-	// => {"Name":"gopher", "ID":123456, "Enabled":true}
-	m := structs.Map(server1)
-	fmt.Println("map", m)
+  err := client.HSet(keyname, m).Err()
+	err2 := client.SAdd("customers", keyname).Err()
 
-	o := structs.Map(server2)
-	fmt.Println("map", o)
-
-	err := client.HSet("customer:2", m).Err()
 	if err != nil {
-		panic(err)
+		return err
+	} else if err2 != nil {
+		return err2
 	}
 
-	err2 := client.SAdd("customers", "customer:2").Err()
-	if err2 != nil {
-		panic(err2)
-	}
+	return nil
+}
 
-	err3 := client.HSet("customer:3", o).Err()
-	if err3 != nil {
-		panic(err3)
-	}
+func populate(){
+	server1 := createServer("gopher3", 111458, true)
+	serverToRedis(server1)
 
-	err4 := client.SAdd("customers", "customer:3").Err()
-	if err4 != nil {
-		panic(err4)
-	}
+	server2 := createServer("gopher4", 111234, false)
+	serverToRedis(server2)
+}
+
+func main() {
+	populate()
 
 	// route
 	http.HandleFunc("/list", listHandler)
