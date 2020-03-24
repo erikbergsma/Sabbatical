@@ -8,6 +8,7 @@ import (
 	//"reflect"
 	//"github.com/mitchellh/mapstructure"
 	"strconv"
+	"encoding/json"
 )
 
 var (
@@ -67,7 +68,13 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Enabled, err := strconv.ParseBool(val2["Enabled"])
+	if err != nil {
+		panic(err)
+	}
 	ID, err := strconv.Atoi(val2["ID"])
+	if err != nil {
+		panic(err)
+	}
 
 	server := &Server{
 		Name:    val2["Name"],
@@ -77,19 +84,15 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("struct", server)
 
-  //map[string]string
-  //fmt.Println(reflect.TypeOf(val2))
-	//var result Server
-	//err2 := mapstructure.Decode(val2, &result)
+  w.Header().Set("Server", "A Go Web Server")
 
-	//fmt.Println(reflect.TypeOf(result))
-	//fmt.Println(reflect.TypeOf(err2))
+	js, err := json.Marshal(server)
+	if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
 
-	//* 'Enabled' expected type 'bool', got unconvertible type 'string'
-	//* 'ID' expected type 'int', got unconvertible type 'string'
-	//fmt.Println("err", err2)
-	//if err2 != nil {
-  //  panic(err)
-	//}
-	//fmt.Println("key3", result)
+	w.Header().Set("Content-Type", "application/json")
+  w.Write(js)
+
 }
