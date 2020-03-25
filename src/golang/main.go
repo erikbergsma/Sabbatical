@@ -32,8 +32,8 @@ type Server struct {
 }
 
 func serverToRedis(server Server) error {
+	ID := strconv.Itoa(server.ID)
 	m := structs.Map(server)
-	ID := strconv.Itoa(m["ID"].(int))
 	keyname := strings.Join([]string{redisHashKeyRoot, ID}, ":")
 
   err := client.HSet(keyname, m).Err()
@@ -69,10 +69,32 @@ func main() {
 
 	// route
 	http.HandleFunc("/list", listHandler)
-	//http.HandleFunc("/create", createHandler)
+	http.HandleFunc("/create", createHandler)
 	//http.HandleFunc("/update", updateHandler)
 	//http.HandleFunc("/delete", deleteHandler)
 	http.ListenAndServe(":3333", nil)
+}
+
+func createHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/", 301)
+	}
+
+	//needs string checking?
+	var server Server
+	server.Name					= r.FormValue("Name")
+	server.Enabled, err	= strconv.ParseBool(r.FormValue("Enabled"))
+	server.ID, err 			= strconv.Atoi(r.FormValue("ID"))
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Save to database
+	serverToRedis(server)
+
+	http.Redirect(w, r, "/", 301)
 }
 
 func listHandler(w http.ResponseWriter, r *http.Request) {
