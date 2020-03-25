@@ -97,53 +97,111 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 301)
 }
 
+func updateHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/", 301)
+	}
+
+	keyname := strings.Join([]string{redisHashKeyRoot, r.FormValue("ID")}, ":")
+	server := getCustomerByKeyname(keyname)
+
+	// needs checking which field needs updating?
+	server.Name					= r.FormValue("Name")
+	server.Enabled, err	= strconv.ParseBool(r.FormValue("Enabled"))
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Save to database
+	serverToRedis(server)
+
+	http.Redirect(w, r, "/", 301)
+}
+
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/", 301)
+	}
+
+	keyname := strings.Join([]string{redisHashKeyRoot, r.FormValue("ID")}, ":")
+
+  err = client.Del(keyname).Err()
+	if err != nil {
+		fmt.Println("err", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = client.SRem(redisSetKeyName, keyname).Err()
+	if err != nil {
+		fmt.Println("err", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/", 301)
+}
+
+func getCustomersIndex() []string{
+	allcustomers, err := client.SMembers(redisSetKeyName).Result()
+	if err == redis.Nil {
+		fmt.Println("key2 does not exist")
+	} else if err != nil {
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println(err)
+	} else {
+		fmt.Println("members", allcustomers)
+	}
+
+	return allcustomers
+}
+
+func getCustomerByKeyname(customer string) Server {
+	val2, err := client.HGetAll(customer).Result()
+
+	if err == redis.Nil {
+		fmt.Println("key2 does not exist")
+	} else if err != nil {
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println(err)
+	} else {
+		fmt.Println("key2", val2)
+	}
+
+	var server Server
+	server.Name = val2["Name"]
+
+	//this should be gracefull?
+	server.Enabled, err = strconv.ParseBool(val2["Enabled"])
+	if err != nil {
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println(err)
+		//return
+	}
+
+	//this should be gracefull?
+	server.ID, err = strconv.Atoi(val2["ID"])
+	if err != nil {
+		fmt.Println(err)
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		//return
+	}
+
+	return server
+}
+
 func listHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", http.StatusBadRequest)
 	}
 
-	allcustomers, err := client.SMembers(redisSetKeyName).Result()
-	if err == redis.Nil {
-		fmt.Println("key2 does not exist")
-	} else if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("members", allcustomers)
-	}
+	allcustomers := getCustomersIndex()
 
 	var customers []Server
 	for _, customer := range allcustomers {
-		val2, err := client.HGetAll(customer).Result()
-		if err == redis.Nil {
-			fmt.Println("key2 does not exist")
-		} else if err != nil {
-			panic(err)
-		} else {
-			fmt.Println("key2", val2)
-		}
-
-		//this should be gracefull?
-		Enabled, err := strconv.ParseBool(val2["Enabled"])
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-	    return
-		}
-
-		//this should be gracefull?
-		ID, err := strconv.Atoi(val2["ID"])
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-	    return
-		}
-
-		// i need to somehow verify if the types are correct
-		// or check for errors when creating this here type
-		server := Server{
-			Name:    val2["Name"],
-			ID:      ID,
-			Enabled: Enabled,
-		}
-
+		server := getCustomerByKeyname(customer)
 		customers = append(customers, server)
 	}
 
