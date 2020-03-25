@@ -19,7 +19,9 @@ var (
 		DB:       0,  // use default DB
 	})
 	err error
-	authenticated = false
+	authenticated 		= false
+	redisSetKeyName		= "customers"
+	redisHashKeyRoot	=	"customer"
 )
 
 type Server struct {
@@ -29,21 +31,13 @@ type Server struct {
 	users       []string // not exported
 }
 
-func createServer(Name string, ID int, Enabled bool) Server {
-	return Server{
-		Name:    Name,
-		ID:      ID,
-		Enabled: Enabled,
-	}
-}
-
 func serverToRedis(server Server) error {
 	m := structs.Map(server)
 	ID := strconv.Itoa(m["ID"].(int))
-	keyname := strings.Join([]string{"customer", ID}, ":")
+	keyname := strings.Join([]string{redisHashKeyRoot, ID}, ":")
 
   err := client.HSet(keyname, m).Err()
-	err2 := client.SAdd("customers", keyname).Err()
+	err2 := client.SAdd(redisSetKeyName, keyname).Err()
 
 	if err != nil {
 		return err
@@ -55,10 +49,18 @@ func serverToRedis(server Server) error {
 }
 
 func populate(){
-	server1 := createServer("gopher3", 111458, true)
+	server1 := Server{
+		Name:    "gopher3",
+		ID:      111458,
+		Enabled: true,
+	}
 	serverToRedis(server1)
 
-	server2 := createServer("gopher4", 111234, false)
+	server2 := Server{
+		Name:    "gopher6",
+		ID:      1232213,
+		Enabled: false,
+	}
 	serverToRedis(server2)
 }
 
@@ -78,7 +80,7 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusBadRequest)
 	}
 
-	allcustomers, err := client.SMembers("customers").Result()
+	allcustomers, err := client.SMembers(redisSetKeyName).Result()
 	if err == redis.Nil {
 		fmt.Println("key2 does not exist")
 	} else if err != nil {
@@ -87,7 +89,6 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("members", allcustomers)
 	}
 
-	//customers := make([]struct{})
 	var customers []Server
 	for _, customer := range allcustomers {
 		val2, err := client.HGetAll(customer).Result()
@@ -99,18 +100,22 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("key2", val2)
 		}
 
+		//this should be gracefull?
 		Enabled, err := strconv.ParseBool(val2["Enabled"])
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	    return
 		}
 
+		//this should be gracefull?
 		ID, err := strconv.Atoi(val2["ID"])
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	    return
 		}
 
+		// i need to somehow verify if the types are correct
+		// or check for errors when creating this here type
 		server := Server{
 			Name:    val2["Name"],
 			ID:      ID,
@@ -130,5 +135,4 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
-
 }
