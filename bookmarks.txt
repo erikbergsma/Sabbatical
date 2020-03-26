@@ -8,6 +8,8 @@ https://github.com/fatih/structs
 https://www.restapiexample.com/golang-tutorial/simple-example-uses-redis-golang/
 https://godoc.org/github.com/go-redis/redis#Client.HGet
 https://sosedoff.com/2016/07/16/golang-struct-tags.html
+
+#inspiration
 https://github.com/thanhngvpt/famcost
 
 #redis
