@@ -72,6 +72,7 @@ func main() {
 	http.HandleFunc("/create", createHandler)
 	//http.HandleFunc("/update", updateHandler)
 	//http.HandleFunc("/delete", deleteHandler)
+	fmt.Println("all systems green, launching API  on port 3333")
 	http.ListenAndServe(":3333", nil)
 }
 
