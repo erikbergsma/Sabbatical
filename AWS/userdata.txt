@@ -1,0 +1,8 @@
+#!/bin/bash
+wget -qO- https://get.docker.com/ | sh
+sudo apt install golang-go -y
+cd /home/ubuntu
+git clone https://github.com/erikbergsma/Sabbatical.git
+chmod -R ubuntu:ubuntu /home/ubuntu/Sabbatical
+for i in $(ls -d /home/ubuntu/Sabbatical/src/golang/*); do cd $i; sudo GOBIN=$GOPATH/bin go get; done
+bash /home/ubuntu/Sabbatical/docker/bootstrap.sh
