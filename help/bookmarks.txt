@@ -1,0 +1,28 @@
+# docker
+https://hub.docker.com/_/redis
+https://www.ionos.com/community/hosting/redis/using-redis-in-docker-containers/
+
+#golang
+https://gobyexample.com/
+https://github.com/fatih/structs
+https://www.restapiexample.com/golang-tutorial/simple-example-uses-redis-golang/
+https://godoc.org/github.com/go-redis/redis#Client.HGet
+https://sosedoff.com/2016/07/16/golang-struct-tags.html
+
+#multistage docker build
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+https://levelup.gitconnected.com/complete-guide-to-create-docker-container-for-your-golang-application-80f3fb59a15e
+
+#inspiration
+https://github.com/thanhngvpt/famcost
+
+#redis
+https://www.youtube.com/watch?v=ELk_W9BBTDU
+
+# environment
+https://github.com/felixrieseberg/windows-development-environment
+https://medium.com/@robzhu/setting-up-a-docker-host-on-windows-with-vagrant-37db0250190c
+https://github.com/github/gitignore/blob/master/Go.gitignore
+
+#git
+https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration
