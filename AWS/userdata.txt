@@ -1,6 +1,6 @@
 #!/bin/bash
 wget -qO- https://get.docker.com/ | sh
-sudo apt install golang-go -y
+#sudo apt install golang-go -y
 cd /home/ubuntu
 git clone https://github.com/erikbergsma/Sabbatical.git
 chown -R ubuntu:ubuntu /home/ubuntu/Sabbatical
