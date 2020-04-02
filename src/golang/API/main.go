@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"github.com/fatih/structs"
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v7"
 	//"reflect"
 	//"github.com/mitchellh/mapstructure"
 	"strconv"
@@ -36,7 +36,7 @@ func serverToRedis(server Server) error {
 	m := structs.Map(server)
 	keyname := strings.Join([]string{redisHashKeyRoot, ID}, ":")
 
-  err := client.HSet(keyname, m).Err()
+	err := client.HSet(keyname, m).Err()
 	err2 := client.SAdd(redisSetKeyName, keyname).Err()
 
 	if err != nil {
