@@ -1,3 +1,0 @@
-# cd into a golang folder
-sudo docker build -t ${PWD##*/} -f ../../../docker/multistagebuild/Dockerfile .
-
