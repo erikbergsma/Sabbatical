@@ -1,3 +1,2 @@
 # cd into a golang folder
-sudo docker build -t ${PWD##*/} -f ../../../docker/multistagebuild/Dockerfile .
-
+sudo docker build -t $(echo ${PWD##*/} | tr '[:upper:]' '[:lower:]') -f ../../../docker/multistagebuild/Dockerfile .
