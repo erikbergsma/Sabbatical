@@ -14,7 +14,7 @@ WORKDIR /build
 COPY . .
 
 # the part after the domain is the name of the executable
-RUN go mod init example.com/Sabatical
+RUN go mod init github.com/erikbergsma/Sabatical
 RUN go mod download
 
 # Build the application
