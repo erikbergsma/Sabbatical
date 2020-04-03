@@ -65,11 +65,11 @@ func setupRedisConnection(){
 		DB:       db,
 	})
 
-	fmt.Println("err1", err)
-	pong, err := client.Ping().Result()
+	//fmt.Println("err1", err)
+	//pong, err := client.Ping().Result()
 
-	fmt.Println("pong", pong)
-	fmt.Println("err2", err)
+	//fmt.Println("pong", pong)
+	//fmt.Println("err2", err)
 
 	if err != nil {
 		fmt.Println(err)
