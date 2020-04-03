@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"net/http"
 	"fmt"
 	"strings"
@@ -13,15 +14,11 @@ import (
 )
 
 var (
-	client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-	err error
-	authenticated 		= false
+	client			= &redis.Client{}
+	err			error
+	authenticated		= false
 	redisSetKeyName		= "customers"
-	redisHashKeyRoot	=	"customer"
+	redisHashKeyRoot	= "customer"
 )
 
 type Server struct {
@@ -29,6 +26,43 @@ type Server struct {
 	ID          int
 	Enabled     bool
 	users       []string // not exported
+}
+
+func setupRedisConnection(){
+	addr, ok := os.LookupEnv("ADDRESS")
+	if ok != true {
+		addr = "localhost:6379"
+	}
+
+	fmt.Println("addr:", addr)
+
+	password, ok := os.LookupEnv("PASSWORD")
+	if ok != true {
+		password = "" // no password set
+		fmt.Println("password: <redacted, default>")
+	} else {
+		fmt.Println("password: <redacted, from ENV>")
+	}
+
+	var db int
+	dbstring, ok := os.LookupEnv("DB")
+	if ok != true {
+		db = 0 // use default DB
+	} else {
+		db, err = strconv.Atoi(dbstring)
+		if err != nil {
+			// handle error
+			fmt.Println(err)
+			os.Exit(2)
+		}
+	}
+	fmt.Println("db:", db)
+
+	client = redis.NewClient(&redis.Options{
+		Addr:     addr,
+		Password: password,
+		DB:       db,
+	})
 }
 
 func serverToRedis(server Server) error {
@@ -65,6 +99,7 @@ func populate(){
 }
 
 func main() {
+	setupRedisConnection()
 	populate()
 
 	// route
@@ -72,6 +107,7 @@ func main() {
 	http.HandleFunc("/create", createHandler)
 	//http.HandleFunc("/update", updateHandler)
 	//http.HandleFunc("/delete", deleteHandler)
+	//fmt.Println(reflect.TypeOf(client))
 	fmt.Println("all systems green, launching API  on port 3333")
 	http.ListenAndServe(":3333", nil)
 }
