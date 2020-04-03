@@ -11,7 +11,7 @@ ENV GO111MODULE=on \
 WORKDIR /build
 
 # Copy and download dependency using go mod
-COPY . .
+COPY *.go .
 
 # the part after the domain is the name of the executable
 RUN go mod init github.com/erikbergsma/Sabatical
