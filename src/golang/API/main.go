@@ -64,6 +64,17 @@ func setupRedisConnection(){
 		Password: password,
 		DB:       db,
 	})
+
+	fmt.Println("err1", err)
+	pong, err := client.Ping().Result()
+
+	fmt.Println("pong", pong)
+	fmt.Println("err2", err)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(2)
+	}
 }
 
 func serverToRedis(server Server) error {
@@ -75,8 +86,10 @@ func serverToRedis(server Server) error {
 	err2 := client.SAdd(redisSetKeyName, keyname).Err()
 
 	if err != nil {
+		fmt.Println("HSET failed: ", err)
 		return err
 	} else if err2 != nil {
+		fmt.Println("SAdd failed: ", err)
 		return err2
 	}
 
