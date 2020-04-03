@@ -2,5 +2,9 @@
 # otherwise it will connect to the localhost that is the container itself.
 sudo docker run -e ADDRESS="localhost:6379" -p 80:3333 -d --rm --name api --network="host" api:latest
 
+# alternatively, get the ip of the other container, and connect to that
+sudo docker run -e ADDRESS="$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' redis):6379" -p 80:3333 -d --rm --name api api:latest
+
+
 # from the golang src folder
 sudo docker build -t $(echo ${PWD##*/} | tr '[:upper:]' '[:lower:]') -f ../../../docker/multistagebuild/Dockerfile .
