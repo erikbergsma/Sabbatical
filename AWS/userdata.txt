@@ -1,5 +1,9 @@
 #!/bin/bash
 wget -qO- https://get.docker.com/ | sh
+add-apt-repository -y ppa:longsleep/golang-backports
+apt update -y
+apt install -y golang-go
+
 #sudo apt install golang-go -y
 cd /home/ubuntu
 git clone https://github.com/erikbergsma/Sabbatical.git
