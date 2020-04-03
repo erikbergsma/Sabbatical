@@ -1,2 +1,6 @@
-# cd into a golang folder
+# need network="host" to talk to a container that is listening to the localhost of the host os
+# otherwise it will connect to the localhost that is the container itself.
+sudo docker run -e ADDRESS="localhost:6379" -p 80:3333 -d --rm --name api --network="host" api:latest
+
+# from the golang src folder
 sudo docker build -t $(echo ${PWD##*/} | tr '[:upper:]' '[:lower:]') -f ../../../docker/multistagebuild/Dockerfile .
