@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"net/http"
 	"fmt"
@@ -99,6 +100,9 @@ func populate(){
 }
 
 func main() {
+	_ = flag.Bool("help", false, "[optional] use: ADDRESS, DB and PASSWORD Environment values to specify a Redis endpoint")
+	flag.Parse()
+
 	setupRedisConnection()
 	populate()
 
@@ -119,9 +123,9 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 
 	//needs string checking?
 	var server Server
-	server.Name					= r.FormValue("Name")
+	server.Name		= r.FormValue("Name")
 	server.Enabled, err	= strconv.ParseBool(r.FormValue("Enabled"))
-	server.ID, err 			= strconv.Atoi(r.FormValue("ID"))
+	server.ID, err		= strconv.Atoi(r.FormValue("ID"))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
