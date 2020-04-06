@@ -1,3 +1,13 @@
+## automatically running against redis container
+sudo docker-compose up
+sudo docker-compose up -d
+sudo docker compose stop
+sudo docker-compose down
+
+## just building
+sudo docker-compose build
+
+## manually running against a redis container
 # need network="host" to talk to a container that is listening to the localhost of the host os
 # otherwise it will connect to the localhost that is the container itself.
 sudo docker run -e ADDRESS="localhost:6379" -p 80:3333 -d --rm --name api --network="host" api:latest
@@ -6,5 +16,6 @@ sudo docker run -e ADDRESS="localhost:6379" -p 80:3333 -d --rm --name api --netw
 sudo docker run -e ADDRESS="$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' redis):6379" -p 80:3333 -d --rm --name api api:latest
 
 
+## manually building
 # from the golang src folder
 sudo docker build -t $(echo ${PWD##*/} | tr '[:upper:]' '[:lower:]') -f ../../../docker/multistagebuild/Dockerfile .

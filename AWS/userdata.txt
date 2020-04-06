@@ -1,12 +1,19 @@
 #!/bin/bash
+
+# docker
 wget -qO- https://get.docker.com/ | sh
+
+# golang
 add-apt-repository -y ppa:longsleep/golang-backports
 apt update -y
 apt install -y golang-go
 
-#sudo apt install golang-go -y
+# git checkout
 cd /home/ubuntu
 git clone https://github.com/erikbergsma/Sabbatical.git
 chown -R ubuntu:ubuntu /home/ubuntu/Sabbatical
-#for i in $(ls -d /home/ubuntu/Sabbatical/src/golang/*); do cd $i; sudo GOBIN=$GOPATH/bin go get; done
-bash /home/ubuntu/Sabbatical/docker/bootstrap.sh
+
+# docker compose
+curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
