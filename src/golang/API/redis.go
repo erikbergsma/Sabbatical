@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func setupRedisConnection(){
+func setupRedisConnection() error {
 	addr, ok := os.LookupEnv("ADDRESS")
 	if ok != true {
 		addr = "localhost:6379"
@@ -46,9 +46,25 @@ func setupRedisConnection(){
 		DB:       db,
 	})
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(2)
+	retries := 5
+	for {
+		pong, err := client.Ping().Result()
+		fmt.Println(pong, err)
+
+		if err != nil {
+			fmt.Println(err)
+			retries--
+
+			if retries == 0 {
+                                panic(err)
+                        }
+
+                        fmt.Println("retrying: ", retries, " more time(s)")
+                        time.Sleep(500 * time.Millisecond)
+
+		} else {
+			return nil
+		}
 	}
 }
 
