@@ -1,7 +1,7 @@
 # Build a small image
 FROM scratch
 
-COPY ./main /main
+COPY ./Sabbatical /main
 
 # Command to run
 ENTRYPOINT ["/main"]
