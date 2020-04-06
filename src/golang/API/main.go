@@ -12,6 +12,7 @@ import (
 	//"github.com/mitchellh/mapstructure"
 	"strconv"
 	"encoding/json"
+	"time"
 )
 
 var (
@@ -82,18 +83,33 @@ func serverToRedis(server Server) error {
 	m := structs.Map(server)
 	keyname := strings.Join([]string{redisHashKeyRoot, ID}, ":")
 
-	err := client.HSet(keyname, m).Err()
-	err2 := client.SAdd(redisSetKeyName, keyname).Err()
+	retries := 5
+	for {
+		success := true
+		err := client.HSet(keyname, m).Err()
+		err2 := client.SAdd(redisSetKeyName, keyname).Err()
 
-	if err != nil {
-		fmt.Println("HSET failed: ", err)
-		return err
-	} else if err2 != nil {
-		fmt.Println("SAdd failed: ", err)
-		return err2
+		if err != nil {
+			success = false
+			fmt.Println("HSET failed: ", err)
+		} else if err2 != nil {
+			success = false
+			fmt.Println("SAdd failed: ", err)
+		}
+
+		if success == false {
+			retries--
+
+			if retries == 0 {
+				return err
+			}
+
+			fmt.Println("retrying: ", retries, " more time(s)")
+			time.Sleep(500 * time.Millisecond)
+		} else {
+			return nil
+		}
 	}
-
-	return nil
 }
 
 func populate(){
