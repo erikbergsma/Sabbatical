@@ -1,0 +1,7 @@
+version: '3'
+services:
+  apifrontend:
+    ports:
+      - 80:80
+    volumes:
+      - ./webroot:/usr/share/nginx/html
