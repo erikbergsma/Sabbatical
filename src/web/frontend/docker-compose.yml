@@ -1,6 +1,7 @@
 version: '3'
 services:
   apifrontend:
+    image: nginx
     ports:
       - 80:80
     volumes:
