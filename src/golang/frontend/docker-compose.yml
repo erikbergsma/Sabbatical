@@ -1,0 +1,18 @@
+version: '3'
+services:
+  api:
+    build:
+      context: /home/ubuntu/Sabbatical/src/golang/API/
+      dockerfile: ../../../docker/multistagebuild/Dockerfile
+    ports:
+      - "8080:3333"
+    environment:
+      - ADDRESS=redis:6379
+    depends_on:
+      - redis
+  redis:
+    image: "redis:latest"
+  apifrontend:
+    image: nginxdemos/hello
+    ports:
+      - 80:80
