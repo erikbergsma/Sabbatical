@@ -22,21 +22,23 @@
       <!-- good stuff -->
 <div ng-app="myApp" ng-controller="customersCtrl"> 
 <table class="table">
-<caption>test table</caption>
-	   
+<caption>test table</caption>	   
 	   <thead>
 	      <tr>
 		 <th>Name</th>
-		 <th>City</th>
-		 <th>Pincode</th>
+		 <th>Enabled</th>
+		 <th>Action</th>
 	      </tr>
 	   </thead>
 	   <tbody>
 	   
 <tr ng-repeat="x in names">
     <td>{{ x.Name }}</td>
-    <td>{{ x.ID }}</td>
     <td>{{ x.Enabled }}</td>
+    <td>
+      <button type="button" class="btn btn-primary">Edit</button>
+      <button type="button" class="btn btn-warning">Delete</button>
+    </td>
   </tr>
 </tbody>
 </table>
