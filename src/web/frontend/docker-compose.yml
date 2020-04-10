@@ -1,6 +1,8 @@
 version: '3'
 services:
   frontend:
+    depends_on: 
+      - api
     image: nginx
     ports:
       - 80:80
