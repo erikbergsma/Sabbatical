@@ -59,15 +59,19 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", 301)
 	}
 
-	keyname := strings.Join([]string{redisHashKeyRoot, r.FormValue("ID")}, ":")
+	ID := strings.TrimSpace(r.FormValue("ID"))
+	keyname := strings.Join([]string{redisHashKeyRoot, ID}, ":")
+	fmt.Println("deleting: ", keyname)
 
-	 err = client.Del(keyname).Err()
+	// delete the redis hash (customer object)
+	err = client.Del(keyname).Err()
 	if err != nil {
 		fmt.Println("err", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	// delete key from index
 	err = client.SRem(redisSetKeyName, keyname).Err()
 	if err != nil {
 		fmt.Println("err", err)

@@ -35,8 +35,11 @@
     <td>{{ x.Name }}</td>
     <td>{{ x.Enabled }}</td>
     <td>
-      <button type="button" class="btn btn-primary" onclick="foo(" {{ x.ID }} ")">Edit</button>
-      <button type="button" class="btn btn-warning" onclick="bar()">Delete</button>
+      <button type="button" class="btn btn-primary">Udate</button>
+      <form class="d-inline" action="api/delete" id="delete" {{ x.ID }} >
+	<input type="hidden" name="ID" value="{{ x.ID }}">
+	<button type="submit" class="btn btn-warning">Delete</button>
+      </form>
     </td>
 </tr>
 <tr>
