@@ -40,15 +40,19 @@
     </td>
 </tr>
 <tr>
-  <td><form action="/api/create" id=createNew><input type="text" id="Name" name="Name" value="John"></td>
   <td>
-      <select id="enabledSelect" name="enabledSelect" form="createNew">
+      <form action="/api/create" id=createNew>
+      <input type="text" id="Name" name="Name" value="John">
+  </td>
+  <td>
+      <select id="enabledSelect" name="Enabled" form="createNew">
         <option value="true">True</option>
         <option value="false">false</option>
       </select>
-      <input type="hidden" id="ID" name="ID" value="11"></td>
-  <td><input type="submit" value="Add" class="btn btn-primary"></td>
-</form>
+  <td>
+      <input type="submit" value="Add" class="btn btn-primary">
+      </form>
+  </td>
 <tr>
 </tbody>
 </table>
