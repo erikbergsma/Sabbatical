@@ -14,6 +14,10 @@
 	  $http.get("/api/list")
 	  .then(function (response) {$scope.names = response.data;});
 	});
+
+	function update(elem) {
+		var name = $("#" + elem.id + "Name");
+	}
     </script>
 	      
    </head>
@@ -32,10 +36,10 @@
 	   <tbody>
 	   
 <tr ng-repeat="x in names">
-    <td>{{ x.Name }}</td>
-    <td>{{ x.Enabled }}</td>
+    <td id="{{ x.id }}Name">{{ x.Name }}</td>
+    <td id="{{ x.id }}Enabled">{{ x.Enabled }}</td>
     <td>
-      <button type="button" class="btn btn-primary">Udate</button>
+      <button type="button" class="btn btn-primary" id="{{x.ID}}" onclick="update(this)">Udate</button>
       <form class="d-inline" action="api/delete" id="delete" {{ x.ID }} >
 	<input type="hidden" name="ID" value="{{ x.ID }}">
 	<button type="submit" class="btn btn-warning">Delete</button>
