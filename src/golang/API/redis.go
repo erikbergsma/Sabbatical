@@ -102,7 +102,12 @@ func serverToRedis(server Server) error {
 	}
 }
 
-func populate(){
+func populate() error {
+	if len(getCustomersIndex()) != 0 {
+		fmt.Println("found entries in DB, skipping the populate process")
+		return nil
+	}
+
 	id := incrGlobalCustomerId()
 
 	server1 := Server{
@@ -120,6 +125,8 @@ func populate(){
 		Enabled: false,
 	}
 	serverToRedis(server2)
+
+	return nil
 }
 
 func getCustomersIndex() []string{
