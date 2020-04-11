@@ -17,7 +17,7 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	var server Server
 	server.Name		= r.FormValue("Name")
 	server.Enabled, err	= strconv.ParseBool(r.FormValue("Enabled"))
-	server.ID, err		= strconv.Atoi(r.FormValue("ID"))
+	server.ID, err          = strconv.ParseInt(r.FormValue("ID"), 10, 64)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

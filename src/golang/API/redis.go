@@ -69,7 +69,7 @@ func setupRedisConnection() error {
 }
 
 func serverToRedis(server Server) error {
-	ID := strconv.Itoa(server.ID)
+	ID := strconv.FormatInt(server.ID, 10)
 	m := structs.Map(server)
 	keyname := strings.Join([]string{redisHashKeyRoot, ID}, ":")
 
@@ -103,16 +103,20 @@ func serverToRedis(server Server) error {
 }
 
 func populate(){
+	id := incrGlobalCustomerId()
+
 	server1 := Server{
 		Name:    "gopher3",
-		ID:      111458,
+		ID:      id,
 		Enabled: true,
 	}
 	serverToRedis(server1)
 
+	id = incrGlobalCustomerId()
+
 	server2 := Server{
 		Name:    "gopher6",
-		ID:      1232213,
+		ID:      id,
 		Enabled: false,
 	}
 	serverToRedis(server2)
@@ -133,22 +137,22 @@ func getCustomersIndex() []string{
 }
 
 func getCustomerByKeyname(customer string) Server {
-	val2, err := client.HGetAll(customer).Result()
+	val, err := client.HGetAll(customer).Result()
 
 	if err == redis.Nil {
-		fmt.Println("key2 does not exist")
+		fmt.Println("key does not exist")
 	} else if err != nil {
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
 		fmt.Println(err)
 	} else {
-		fmt.Println("key2", val2)
+		fmt.Println("key", val)
 	}
 
 	var server Server
-	server.Name = val2["Name"]
+	server.Name = val["Name"]
 
 	//this should be gracefull?
-	server.Enabled, err = strconv.ParseBool(val2["Enabled"])
+	server.Enabled, err = strconv.ParseBool(val["Enabled"])
 	if err != nil {
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
 		fmt.Println(err)
@@ -156,7 +160,7 @@ func getCustomerByKeyname(customer string) Server {
 	}
 
 	//this should be gracefull?
-	server.ID, err = strconv.Atoi(val2["ID"])
+	server.ID, err = strconv.ParseInt(val["ID"], 10, 64)
 	if err != nil {
 		fmt.Println(err)
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -165,3 +169,14 @@ func getCustomerByKeyname(customer string) Server {
 
 	return server
 }
+
+func incrGlobalCustomerId() int64 {
+	result, err := client.Incr(redisIdKeyName).Result()
+	if err != nil {
+	    fmt.Println("error incrementing:", err)
+	}
+
+	fmt.Println("new id: ", result)
+	return result
+}
+
