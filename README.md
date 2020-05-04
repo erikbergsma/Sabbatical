@@ -11,3 +11,4 @@
 cd Sabbatical/src/web/frontend
 docker-compose up
 ```
+docker-compose will then either run or build all the containers needed, pretty cool
