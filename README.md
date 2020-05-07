@@ -9,6 +9,6 @@
 ## to see this project in action
 ```shell
 cd Sabbatical/src/web/frontend
-docker-compose up
+sudo docker-compose up
 ```
 docker-compose will then either run or build all the containers needed, pretty cool
