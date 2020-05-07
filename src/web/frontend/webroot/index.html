@@ -21,7 +21,6 @@
             } else{
               item.selectedOption = {id: '2', name: 'false'}
             }
-            console.log(item)
           })
         });
 
@@ -31,14 +30,17 @@
         }
 
         $scope.update = function(array, id){
-          var name = $('#' + id + '_name').html()
-          var enabled = $('#' + id + '_enabled').html()
+          var name = $('#' + id + '_name').val()
+          var enabled = $('#' + id + '_enabled').val()
+
+          console.log(name)
+          console.log(enabled)
 
           array.forEach(function(item, index){
-              if (item.ID == id) {
-                item.Name = name;
-                item.Enabled = enabled;
-              }
+            if (item.ID == id) {
+              item.Name = name;
+              item.Enabled = enabled;
+            }
           })
         }
 
@@ -46,8 +48,7 @@
          availableOptions: [
            {id: '1', name: 'true'},
            {id: '2', name: 'false'}
-         ],
-         selectedOption: {id: '1', name: 'true'}
+         ]
         };
 
     	});
@@ -66,7 +67,9 @@
 	   </thead>
 	   <tbody>
        <tr ng-repeat="x in names">
-        <td id="{{ x.ID + '_name' }}">{{ x.Name }}</td>
+        <td>
+          <input type="text" id="{{ x.ID + '_name' }}" value="{{ x.Name }}">
+        </td>
         <td>
           <select id="{{ x.ID + '_enabled' }}"
             ng-options="option.name for option in data.availableOptions track by option.id"
