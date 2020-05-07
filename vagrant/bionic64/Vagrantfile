@@ -17,12 +17,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder "../../", "/sabbatical", create: true
 
-  config.vm.provision "shell", inline: <<-SHELL
-    wget -qO- https://get.docker.com/ | sh
-    sudo apt install golang-go -y
-  SHELL
-
-  config.vm.provision "shell", path: "../../docker/bootstrap.sh", run: "always", privileged: false
+  config.vm.provision "shell", path: "../../AWS/userdata.txt", run: "always", privileged: true
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -33,7 +28,7 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # NOTE: This will enable public access to the opened port
-  config.vm.network "forwarded_port", guest: 6379, host: 6379
+  config.vm.network "forwarded_port", guest: 80, host: 8080
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
