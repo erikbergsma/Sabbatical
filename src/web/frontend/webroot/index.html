@@ -12,7 +12,18 @@
     	app.controller('customersCtrl', function($scope, $http) {
         //get data from API
         $http.get("/api/list")
-    	  .then(function (response) {$scope.names = response.data;});
+    	  .then(function (response) {
+          $scope.names = response.data;
+
+          angular.forEach($scope.names, function (item) {
+            if (item.Enabled){
+              item.selectedOption = {id: '1', name: 'true'}
+            } else{
+              item.selectedOption = {id: '2', name: 'false'}
+            }
+            console.log(item)
+          })
+        });
 
         //onclick handler
         $scope.remove = function(array, index){
@@ -30,6 +41,15 @@
               }
           })
         }
+
+        $scope.data = {
+         availableOptions: [
+           {id: '1', name: 'true'},
+           {id: '2', name: 'false'}
+         ],
+         selectedOption: {id: '1', name: 'true'}
+        };
+
     	});
     </script>
 	</head>
@@ -45,15 +65,19 @@
 	      </tr>
 	   </thead>
 	   <tbody>
-      <tr ng-repeat="x in names">
-          <td id="{{ x.ID + '_name' }}">{{ x.Name }}</td>
-          <td id="{{ x.ID + '_enabled' }}">{{ x.Enabled }}</td>
-          <td>
-            <button type="button" class="btn btn-primary" id="{{x.ID}}_update" ng-click="update(names, x.ID)">Udate</button>
-            <button type="button" class="btn btn-warning" id="{{x.ID}}_delete" ng-click="remove(names, $index)">Delete</button>
-            <input type="hidden" name="ID" value="{{ x.ID }}">
-            </form>
-          </td>
+       <tr ng-repeat="x in names">
+        <td id="{{ x.ID + '_name' }}">{{ x.Name }}</td>
+        <td>
+          <select id="{{ x.ID + '_enabled' }}"
+            ng-options="option.name for option in data.availableOptions track by option.id"
+            ng-model="x.selectedOption">
+          </select>
+        </td>
+        <td>
+          <button type="button" class="btn btn-primary" id="{{x.ID}}_update" ng-click="update(names, x.ID)">Udate</button>
+          <button type="button" class="btn btn-warning" id="{{x.ID}}_delete" ng-click="remove(names, $index)">Delete</button>
+          <input type="hidden" name="ID" value="{{ x.ID }}">
+        </td>
       </tr>
       <tr>
         <td>
