@@ -16,9 +16,19 @@
 
         //onclick handler
         $scope.remove = function(array, index){
-          console.log(array)
-          console.log(index)
           array.splice(index, 1);
+        }
+
+        $scope.update = function(array, id){
+          var name = $('#' + id + '_name').html()
+          var enabled = $('#' + id + '_enabled').html()
+
+          array.forEach(function(item, index){
+              if (item.ID == id) {
+                item.Name = name;
+                item.Enabled = enabled;
+              }
+          })
         }
     	});
     </script>
@@ -26,7 +36,7 @@
   <body>
   <!-- good stuff -->
 <div ng-app="myApp" ng-controller="customersCtrl">
-<table class="table">
+  <table class="table">
 	   <thead>
 	      <tr>
     		 <th>Name</th>
@@ -36,10 +46,10 @@
 	   </thead>
 	   <tbody>
       <tr ng-repeat="x in names">
-          <td id="{{ x.id }}_name">{{ x.Name }}</td>
-          <td id="{{ x.id }}_enabled">{{ x.Enabled }}</td>
+          <td id="{{ x.ID + '_name' }}">{{ x.Name }}</td>
+          <td id="{{ x.ID + '_enabled' }}">{{ x.Enabled }}</td>
           <td>
-            <button type="button" class="btn btn-primary" id="{{x.ID}}_update" onclick="update(this)">Udate</button>
+            <button type="button" class="btn btn-primary" id="{{x.ID}}_update" ng-click="update(names, x.ID)">Udate</button>
             <button type="button" class="btn btn-warning" id="{{x.ID}}_delete" ng-click="remove(names, $index)">Delete</button>
             <input type="hidden" name="ID" value="{{ x.ID }}">
             </form>
