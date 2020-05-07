@@ -1,67 +1,66 @@
 <!DOCTYPE html>
 <html>
-   
-   <head>
-	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-      <!-- me gusta? -->
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-      <script>
-	var app = angular.module('myApp', []);
-	app.controller('customersCtrl', function($scope, $http) {
-	  $http.get("/api/list")
-	  .then(function (response) {$scope.names = response.data;});
-	});
+  <head>
+  	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- me gusta? -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script>
+    	var app = angular.module('myApp', []);
+    	app.controller('customersCtrl', function($scope, $http) {
+        //get data from API
+        $http.get("/api/list")
+    	  .then(function (response) {$scope.names = response.data;});
 
-	function update(elem) {
-		var name = $("#" + elem.id + "Name");
-	}
+        //onclick handler
+        $scope.remove = function(array, index){
+          console.log(array)
+          console.log(index)
+          array.splice(index, 1);
+        }
+    	});
     </script>
-	      
-   </head>
-   
-   <body>
-      <!-- good stuff -->
-<div ng-app="myApp" ng-controller="customersCtrl"> 
+	</head>
+  <body>
+  <!-- good stuff -->
+<div ng-app="myApp" ng-controller="customersCtrl">
 <table class="table">
 	   <thead>
 	      <tr>
-		 <th>Name</th>
-		 <th>Enabled</th>
-		 <th>Action</th>
+    		 <th>Name</th>
+    		 <th>Enabled</th>
+    		 <th>Action</th>
 	      </tr>
 	   </thead>
 	   <tbody>
-	   
-<tr ng-repeat="x in names">
-    <td id="{{ x.id }}Name">{{ x.Name }}</td>
-    <td id="{{ x.id }}Enabled">{{ x.Enabled }}</td>
-    <td>
-      <button type="button" class="btn btn-primary" id="{{x.ID}}" onclick="update(this)">Udate</button>
-      <form class="d-inline" action="api/delete" id="delete" {{ x.ID }} >
-	<input type="hidden" name="ID" value="{{ x.ID }}">
-	<button type="submit" class="btn btn-warning">Delete</button>
-      </form>
-    </td>
-</tr>
-<tr>
-  <td>
-      <form action="/api/create" id=createNew>
-      <input type="text" id="Name" name="Name" value="John">
-  </td>
-  <td>
-      <select id="enabledSelect" name="Enabled" form="createNew">
-        <option value="true">True</option>
-        <option value="false">false</option>
-      </select>
-  <td>
-      <input type="submit" value="Add" class="btn btn-primary">
-      </form>
-  </td>
-<tr>
-</tbody>
-</table>
+      <tr ng-repeat="x in names">
+          <td id="{{ x.id }}_name">{{ x.Name }}</td>
+          <td id="{{ x.id }}_enabled">{{ x.Enabled }}</td>
+          <td>
+            <button type="button" class="btn btn-primary" id="{{x.ID}}_update" onclick="update(this)">Udate</button>
+            <button type="button" class="btn btn-warning" id="{{x.ID}}_delete" ng-click="remove(names, $index)">Delete</button>
+            <input type="hidden" name="ID" value="{{ x.ID }}">
+            </form>
+          </td>
+      </tr>
+      <tr>
+        <td>
+            <form action="/api/create" id=createNew>
+            <input type="text" id="Name" name="Name" value="John">
+        </td>
+        <td>
+            <select id="enabledSelect" name="Enabled" form="createNew">
+              <option value="true">True</option>
+              <option value="false">false</option>
+            </select>
+        <td>
+            <input type="submit" value="Add" class="btn btn-primary">
+            </form>
+        </td>
+      <tr>
+    </tbody>
+  </table>
 </body>
 </html>
