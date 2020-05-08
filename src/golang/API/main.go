@@ -8,15 +8,18 @@ import (
 )
 
 var (
-	client			= &redis.Client{}
-	err			error
-	authenticated		= false
+	client = &redis.Client{}
+	err		  error
+)
+
+const(
+	authenticated			= false
 	// a list of ids will be stored under customer => [1, 2, 3]
 	redisSetKeyName		= "customers"
 	// customers will be stored under customer:id => foo
 	redisHashKeyRoot	= "customer"
 	// customer id's will be generated server side based
-	redisIdKeyName          = "lastCustomerId"
+	redisIdKeyName		= "lastCustomerId"
 )
 
 func main() {
@@ -28,9 +31,9 @@ func main() {
 
 	// route
 	http.HandleFunc("/list", listHandler)
-	//http.HandleFunc("/create", createHandler)
+	http.HandleFunc("/create", createHandler)
 	http.HandleFunc("/update", updateHandler)
-	//http.HandleFunc("/delete", deleteHandler)
+	http.HandleFunc("/delete", deleteHandler)
 	fmt.Println("all systems green, launching API  on port 3333")
 	http.ListenAndServe(":3333", nil)
 }
