@@ -26,13 +26,25 @@ app.controller('customersCtrl', function($scope, $http) {
     // i can just pass the index and the array, so i dont need to do a for loop ^^
     array[index].Name = name;
     array[index].Enabled = enabled;
+
+    console.log(typeof(array[index]))
+
+    //Call the services
+    $http.post('/api/update', JSON.stringify(array[index])).then(function (response) {
+      if (response.data)
+        $scope.msg = "Post Data Submitted Successfully!";
+      }, function (response) {
+        $scope.msg = "Service not Exists";
+        $scope.statusval = response.status;
+        $scope.statustext = response.statusText;
+        $scope.headers = response.headers();
+    });
   }
 
   $scope.data = {
-   availableOptions: [
-     {id: '1', name: 'true'},
-     {id: '2', name: 'false'}
-   ]
+    availableOptions: [
+      {id: '1', name: 'true'},
+      {id: '2', name: 'false'}
+    ]
   };
-
 });
