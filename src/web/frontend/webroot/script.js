@@ -6,10 +6,11 @@ app.controller('customersCtrl', function($scope, $http) {
     $scope.names = response.data;
 
     angular.forEach($scope.names, function (item) {
+      console.log(item)
       if (item.Enabled){
-        item.selectedOption = {id: 'true', name: 'true'}
+        item.selectedOption = {id: 0, name: true}
       } else{
-        item.selectedOption = {id: 'false', name: 'false'}
+        item.selectedOption = {id: 1, name: false}
       }
     })
   });
@@ -21,13 +22,12 @@ app.controller('customersCtrl', function($scope, $http) {
 
   $scope.update = function(array, index, id){
     var name = $('#' + id + '_name').val()
-    var enabled = $('#' + id + '_enabled').val()
+    var enabledval = $('#' + id + '_enabled').val()
+    var enabled = $scope.data.availableOptions[enabledval].name
 
     // i can just pass the index and the array, so i dont need to do a for loop ^^
     array[index].Name = name;
     array[index].Enabled = enabled;
-
-    console.log(typeof(array[index]))
 
     //Call the services
     $http.post('/api/update', JSON.stringify(array[index])).then(function (response) {
@@ -43,8 +43,8 @@ app.controller('customersCtrl', function($scope, $http) {
 
   $scope.data = {
     availableOptions: [
-      {id: 'true', name: 'true'},
-      {id: 'false', name: 'false'}
+      {id: 0, name: true},
+      {id: 1, name: false}
     ]
   };
 });

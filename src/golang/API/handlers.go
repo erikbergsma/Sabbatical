@@ -48,9 +48,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 	}
 
-	log.Println(string(body))
-	var dumpserver ServerString
-	//var t test_struct
+	var dumpserver Server
 	err = json.Unmarshal(body, &dumpserver)
 
 	if err != nil {
@@ -63,13 +61,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 
 	// needs checking which field needs updating?
 	server.Name					= dumpserver.Name
-	server.Enabled, err	= strconv.ParseBool(dumpserver.Enabled)
-
-	if err != nil {
-		fmt.Println("problem formatting boolean")
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+  server.Enabled	    = dumpserver.Enabled
 
 	// Save to database
 	serverToRedis(server)
