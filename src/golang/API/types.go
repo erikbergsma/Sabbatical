@@ -7,3 +7,9 @@ type Server struct {
 	users       []string // not exported
 }
 
+type ServerString struct {
+	Name        string
+	ID          int64
+	Enabled     string
+	users       []string // not exported
+}

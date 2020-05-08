@@ -7,9 +7,9 @@ app.controller('customersCtrl', function($scope, $http) {
 
     angular.forEach($scope.names, function (item) {
       if (item.Enabled){
-        item.selectedOption = {id: '1', name: 'true'}
+        item.selectedOption = {id: 'true', name: 'true'}
       } else{
-        item.selectedOption = {id: '2', name: 'false'}
+        item.selectedOption = {id: 'false', name: 'false'}
       }
     })
   });
@@ -43,8 +43,8 @@ app.controller('customersCtrl', function($scope, $http) {
 
   $scope.data = {
     availableOptions: [
-      {id: '1', name: 'true'},
-      {id: '2', name: 'false'}
+      {id: 'true', name: 'true'},
+      {id: 'false', name: 'false'}
     ]
   };
 });

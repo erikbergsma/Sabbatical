@@ -162,6 +162,7 @@ func getCustomerByKeyname(customer string) Server {
 	server.Enabled, err = strconv.ParseBool(val["Enabled"])
 	if err != nil {
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println("erik was here")
 		fmt.Println(err)
 		//return
 	}
@@ -186,4 +187,3 @@ func incrGlobalCustomerId() int64 {
 	fmt.Println("new id: ", result)
 	return result
 }
-
