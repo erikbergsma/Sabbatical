@@ -1,10 +1,11 @@
 # Sabbatical
  some stuff i want to explore, post or mid sabbatical
- 
- - golang
- - KV storage as a backend
- - containers / k8s
- - deploy pipelines
+  
+so far:
+ - CRUD API written in golang + redis as a DB
+ - API frontend in angularjs
+ - frontend, API and DB are seperate containerized services 
+ - these services are under docker-compose for running and building
 
 ## to see this project in action
 ```shell
