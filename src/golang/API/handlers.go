@@ -17,22 +17,33 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", 301)
 	}
 
-	//needs string checking?
-	var server Server
-	server.Name		= r.FormValue("Name")
-	server.Enabled, err	= strconv.ParseBool(r.FormValue("Enabled"))
-	//assign a newly generated/incremented id
-	server.ID		= incrGlobalCustomerId()
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
+	var newserver Server
+	err = json.Unmarshal(body, &newserver)
+
+	if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	//we create the ID serverside
+	newserver.ID		= incrGlobalCustomerId()
+
+	// Save to database
+	serverToRedis(newserver)
+
+	//return to the client so he can fetch the ID / check
+	js, err := json.Marshal(newserver)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Save to database
-	serverToRedis(server)
-
-	http.Redirect(w, r, "/", 301)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
 
 func updateHandler(w http.ResponseWriter, r *http.Request) {
