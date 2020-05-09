@@ -39,6 +39,10 @@ app.controller('customersCtrl', function($scope, $http) {
 
         //give angularjs a new entry in the data, so it can update the HTML
         array.push(newItem);
+
+        //clean the input html element
+        $('#newName').val("")
+
       }, function (response) {
         userFeedback();
     });
