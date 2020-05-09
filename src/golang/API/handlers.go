@@ -50,7 +50,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &dumpserver)
 
 	if err != nil {
-			panic(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	keyname := strings.Join([]string{redisHashKeyRoot, strconv.FormatInt(dumpserver.ID, 10)}, ":")
