@@ -3,7 +3,7 @@
   
 so far:
  - CRUD API written in golang + redis as a DB
- - API frontend in angularjs
+ - API frontend in angularjs (under NGINX)
  - frontend, API and DB are seperate containerized services 
  - these services are under docker-compose for running and building
 
