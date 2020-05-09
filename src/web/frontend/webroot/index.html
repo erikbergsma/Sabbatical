@@ -38,17 +38,15 @@
       </tr>
       <tr>
         <td>
-            <form action="/api/create" id=createNew>
-            <input type="text" id="Name" name="Name" value="John">
+            <input type="text" id="newName" name="Name" placeholder="John">
         </td>
         <td>
-            <select id="enabledSelect" name="Enabled" form="createNew">
+            <select id="newEnabledSelect" name="Enabled">
               <option value="true">True</option>
               <option value="false">false</option>
             </select>
         <td>
-            <input type="submit" value="Add" class="btn btn-primary">
-            </form>
+            <input type="button" ng-click="add(names)" value="Add" class="btn btn-primary">
         </td>
       <tr>
     </tbody>

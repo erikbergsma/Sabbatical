@@ -14,6 +14,19 @@ app.controller('customersCtrl', function($scope, $http) {
     })
   });
 
+  $scope.add = function(array){
+    var name = $('#newName').val()
+    var enabledval = $('#newEnabledSelect').val()
+
+    if (enabledval == "true"){
+      var selectedOption = {id: 0, name: true}
+    } else {
+      var selectedOption = {id: 1, name: false}
+    }
+
+    array.push({"Name": name, "Enabled": enabledval, "ID": 999, "selectedOption": selectedOption});
+  }
+
   //onclick handler
   $scope.remove = function(array, index){
     //Call the services
