@@ -37,15 +37,13 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("updateHandler")
-
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/", 301)
 	}
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-			panic(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	var dumpserver Server
@@ -56,7 +54,6 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	keyname := strings.Join([]string{redisHashKeyRoot, strconv.FormatInt(dumpserver.ID, 10)}, ":")
-	fmt.Println(keyname)
 	server := getCustomerByKeyname(keyname)
 
 	// needs checking which field needs updating?
