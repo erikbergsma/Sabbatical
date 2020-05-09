@@ -6,7 +6,6 @@ app.controller('customersCtrl', function($scope, $http) {
     $scope.names = response.data;
 
     angular.forEach($scope.names, function (item) {
-      console.log(item)
       if (item.Enabled){
         item.selectedOption = {id: 0, name: true}
       } else{
@@ -17,7 +16,15 @@ app.controller('customersCtrl', function($scope, $http) {
 
   //onclick handler
   $scope.remove = function(array, index){
-    array.splice(index, 1);
+    //Call the services
+    $http.post('/api/delete', JSON.stringify(array[index])).then(function (response) {
+      if (response.data)
+        $scope.msg = "Post Data Submitted Successfully!"
+        $scope.timestamp = getTime();
+        array.splice(index, 1);
+      }, function (response) {
+        userFeedback();
+    });
   }
 
   $scope.update = function(array, index, id){
@@ -32,13 +39,19 @@ app.controller('customersCtrl', function($scope, $http) {
     //Call the services
     $http.post('/api/update', JSON.stringify(array[index])).then(function (response) {
       if (response.data)
-        $scope.msg = "Post Data Submitted Successfully!";
+        $scope.msg = "Post Data Submitted Successfully!"
+        $scope.timestamp = getTime();
       }, function (response) {
-        $scope.msg = "Service not Exists";
-        $scope.statusval = response.status;
-        $scope.statustext = response.statusText;
-        $scope.headers = response.headers();
+        userFeedback();
     });
+  }
+
+  function userFeedback(response){
+    $scope.msg = response.xhrStatus;
+    $scope.timestamp = getTime();
+    $scope.statusval = response.status;
+    $scope.statustext = response.statusText;
+    $scope.headers = response.headers();
   }
 
   $scope.data = {
@@ -48,3 +61,10 @@ app.controller('customersCtrl', function($scope, $http) {
     ]
   };
 });
+
+function getTime(){
+  var today = new Date();
+  var date = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  return date+' '+time;
+}

@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 )
 type test_struct struct {
     Test string
@@ -71,8 +70,19 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", 301)
 	}
 
-	ID := strings.TrimSpace(r.FormValue("ID"))
-	keyname := strings.Join([]string{redisHashKeyRoot, ID}, ":")
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	var dumpserver Server
+	err = json.Unmarshal(body, &dumpserver)
+
+	if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	keyname := strings.Join([]string{redisHashKeyRoot, strconv.FormatInt(dumpserver.ID, 10)}, ":")
 	fmt.Println("deleting: ", keyname)
 
 	// delete the redis hash (customer object)
