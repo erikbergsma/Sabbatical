@@ -14,17 +14,34 @@ app.controller('customersCtrl', function($scope, $http) {
     })
   });
 
-  $scope.add = function(array){
+  $scope.create = function(array){
     var name = $('#newName').val()
     var enabledval = $('#newEnabledSelect').val()
 
     if (enabledval == "true"){
       var selectedOption = {id: 0, name: true}
+      var enabled = true
     } else {
       var selectedOption = {id: 1, name: false}
+      var enabled = false
     }
 
-    array.push({"Name": name, "Enabled": enabledval, "ID": 999, "selectedOption": selectedOption});
+    var newItem = {"Name": name, "Enabled": enabled, "selectedOption": selectedOption}
+
+    $http.post('/api/create', JSON.stringify(newItem)).then(function (response) {
+      if (response.data)
+        //same as allways
+        $scope.msg = "Post Data Submitted Successfully!"
+        $scope.timestamp = getTime();
+
+        //the id is generated at the backend
+        newItem["ID"] = response.data["ID"]
+
+        //give angularjs a new entry in the data, so it can update the HTML
+        array.push(newItem);
+      }, function (response) {
+        userFeedback();
+    });
   }
 
   //onclick handler
