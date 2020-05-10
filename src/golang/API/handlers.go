@@ -2,11 +2,11 @@ package main
 
 import (
 	"net/http"
-	"fmt"
 	"strings"
 	"strconv"
 	"encoding/json"
 	"io/ioutil"
+	log "github.com/sirupsen/logrus"
 )
 type test_struct struct {
     Test string
@@ -19,6 +19,7 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
+			log.Error(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -26,6 +27,7 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &newserver)
 
 	if err != nil {
+			log.Error(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -38,6 +40,7 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	//return to the client so he can fetch the ID / check
 	js, err := json.Marshal(newserver)
 	if err != nil {
+		log.Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -53,6 +56,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
+			log.Error(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -60,6 +64,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &dumpserver)
 
 	if err != nil {
+			log.Error(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -83,6 +88,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
+			log.Error(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -90,16 +96,17 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &dumpserver)
 
 	if err != nil {
+			log.Error(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	keyname := strings.Join([]string{redisHashKeyRoot, strconv.FormatInt(dumpserver.ID, 10)}, ":")
-	fmt.Println("deleting: ", keyname)
+	log.Debug("deleting: ", keyname)
 
 	// delete the redis hash (customer object)
 	err = client.Del(keyname).Err()
 	if err != nil {
-		fmt.Println("err", err)
+		log.Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -107,7 +114,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	// delete key from index
 	err = client.SRem(redisSetKeyName, keyname).Err()
 	if err != nil {
-		fmt.Println("err", err)
+		log.Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -132,6 +139,7 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 
 	js, err := json.Marshal(customers)
 	if err != nil {
+		log.Error(err.Error())
 	  http.Error(w, err.Error(), http.StatusInternalServerError)
 	  return
 	}
