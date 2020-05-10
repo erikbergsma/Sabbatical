@@ -1,7 +1,7 @@
 version: '3'
 services:
   frontend:
-    depends_on: 
+    depends_on:
       - api
     image: nginx
     ports:
@@ -15,6 +15,7 @@ services:
     image: api_api
     environment:
       - ADDRESS=redis:6379
+      - LOGLEVEL=debug
     depends_on:
       - redis
   redis:

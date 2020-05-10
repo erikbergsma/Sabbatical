@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"net/http"
-	"os"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -11,10 +10,10 @@ func init(){
 	_ = flag.Bool("help", false, "[optional] use: ADDRESS, DB and PASSWORD Environment values to specify a Redis endpoint")
 	flag.Parse()
 
+	setLogger()
+
 	setupRedisConnection()
 	populate()
-
-	log.SetOutput(os.Stdout)
 }
 
 func main() {
