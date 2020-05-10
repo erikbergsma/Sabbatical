@@ -62,15 +62,18 @@ app.controller('customersCtrl', function($scope, $http) {
   }
 
   $scope.update = function(array, index, id){
+    //get the new value from the html
     var name = $('#' + id + '_name').val()
     var enabledval = $('#' + id + '_enabled').val()
+
+    //map the enabled field to a value that the api will understand
     var enabled = $scope.data.availableOptions[enabledval].name
 
-    // i can just pass the index and the array, so i dont need to do a for loop ^^
+    //set the fetched values as new values in the Angular obj
     array[index].Name = name;
     array[index].Enabled = enabled;
 
-    //Call the services
+    //Call the services, pass the Angularjs obj
     $http.post('/api/update', JSON.stringify(array[index])).then(function (response) {
       if (response.data)
         $scope.msg = "Post Data Submitted Successfully!"
