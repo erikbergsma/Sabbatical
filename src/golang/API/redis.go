@@ -2,12 +2,12 @@ package main
 
 import (
 	"os"
-	"fmt"
 	"strings"
 	"github.com/fatih/structs"
 	"github.com/go-redis/redis/v7"
 	"strconv"
 	"time"
+	log "github.com/sirupsen/logrus"
 )
 
 func setupRedisConnection() error {
@@ -16,14 +16,14 @@ func setupRedisConnection() error {
 		addr = "localhost:6379"
 	}
 
-	fmt.Println("addr:", addr)
+	log.Debug("addr:", addr)
 
 	password, ok := os.LookupEnv("PASSWORD")
 	if ok != true {
 		password = "" // no password set
-		fmt.Println("password: <redacted, default>")
+		log.Debug("password: <redacted, default>")
 	} else {
-		fmt.Println("password: <redacted, from ENV>")
+		log.Debug("password: <redacted, from ENV>")
 	}
 
 	var db int
@@ -34,11 +34,11 @@ func setupRedisConnection() error {
 		db, err = strconv.Atoi(dbstring)
 		if err != nil {
 			// handle error
-			fmt.Println(err)
+			log.Error(err)
 			os.Exit(2)
 		}
 	}
-	fmt.Println("db:", db)
+	log.Debug("db:", db)
 
 	client = redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -49,18 +49,18 @@ func setupRedisConnection() error {
 	retries := 5
 	for {
 		pong, err := client.Ping().Result()
-		fmt.Println(pong, err)
+		log.Debug(pong, err)
 
 		if err != nil {
-			fmt.Println(err)
+			log.Error(err)
 			retries--
 
 			if retries == 0 {
-                                panic(err)
-                        }
+				panic(err)
+			}
 
-                        fmt.Println("retrying: ", retries, " more time(s)")
-                        time.Sleep(500 * time.Millisecond)
+			log.Debug("retrying: ", retries, " more time(s)")
+			time.Sleep(500 * time.Millisecond)
 
 		} else {
 			return nil
@@ -81,10 +81,10 @@ func serverToRedis(server Server) error {
 
 		if err != nil {
 			success = false
-			fmt.Println("HSET failed: ", err)
+			log.Error("HSET failed: ", err)
 		} else if err2 != nil {
 			success = false
-			fmt.Println("SAdd failed: ", err)
+			log.Error("SAdd failed: ", err)
 		}
 
 		if success == false {
@@ -94,7 +94,7 @@ func serverToRedis(server Server) error {
 				return err
 			}
 
-			fmt.Println("retrying: ", retries, " more time(s)")
+			log.Debug("retrying: ", retries, " more time(s)")
 			time.Sleep(500 * time.Millisecond)
 		} else {
 			return nil
@@ -104,7 +104,7 @@ func serverToRedis(server Server) error {
 
 func populate() error {
 	if len(getCustomersIndex()) != 0 {
-		fmt.Println("found entries in DB, skipping the populate process")
+		log.Debug("found entries in DB, skipping the populate process")
 		return nil
 	}
 
@@ -132,12 +132,12 @@ func populate() error {
 func getCustomersIndex() []string{
 	allcustomers, err := client.SMembers(redisSetKeyName).Result()
 	if err == redis.Nil {
-		fmt.Println("key2 does not exist")
+		log.Warning("No members in redis list: ", redisSetKeyName)
 	} else if err != nil {
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		fmt.Println(err)
+		log.Error(err)
 	} else {
-		fmt.Println("members", allcustomers)
+		log.Debug("members", allcustomers)
 	}
 
 	return allcustomers
@@ -147,12 +147,12 @@ func getCustomerByKeyname(customer string) Server {
 	val, err := client.HGetAll(customer).Result()
 
 	if err == redis.Nil {
-		fmt.Println("key does not exist")
+		log.Warning("key does not exist")
 	} else if err != nil {
 		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		fmt.Println(err)
+		log.Error(err)
 	} else {
-		fmt.Println("key", val)
+		log.Debug("key", val)
 	}
 
 	var server Server
@@ -161,17 +161,13 @@ func getCustomerByKeyname(customer string) Server {
 	//this should be gracefull?
 	server.Enabled, err = strconv.ParseBool(val["Enabled"])
 	if err != nil {
-		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		fmt.Println(err)
-		//return
+		log.Error(err)
 	}
 
 	//this should be gracefull?
 	server.ID, err = strconv.ParseInt(val["ID"], 10, 64)
 	if err != nil {
-		fmt.Println(err)
-		//http.Error(w, err.Error(), http.StatusInternalServerError)
-		//return
+		log.Error(err)
 	}
 
 	return server
@@ -180,9 +176,9 @@ func getCustomerByKeyname(customer string) Server {
 func incrGlobalCustomerId() int64 {
 	result, err := client.Incr(redisIdKeyName).Result()
 	if err != nil {
-	    fmt.Println("error incrementing:", err)
+	    log.Error("error incrementing:", err)
 	}
 
-	fmt.Println("new id: ", result)
+	log.Debug("new id: ", result)
 	return result
 }

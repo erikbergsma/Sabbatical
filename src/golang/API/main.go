@@ -3,7 +3,8 @@ package main
 import (
 	"flag"
 	"net/http"
-	"fmt"
+	"os"
+	log "github.com/sirupsen/logrus"
 )
 
 func init(){
@@ -12,6 +13,8 @@ func init(){
 
 	setupRedisConnection()
 	populate()
+
+	log.SetOutput(os.Stdout)
 }
 
 func main() {
@@ -21,6 +24,6 @@ func main() {
 	http.HandleFunc("/update", updateHandler)
 	http.HandleFunc("/delete", deleteHandler)
 
-	fmt.Println("all systems green, launching API  on port 3333")
+	log.Info("all systems green, launching API  on port 3333")
 	http.ListenAndServe(":3333", nil)
 }
