@@ -29,7 +29,7 @@ http {
 
         # variables set by the environment
       	location /api/ {
-      	    proxy_pass http://${API_HOST}:${API_PORT}/;
+      	    proxy_pass ${API_FQDN};
         }
 
         error_page 500 502 503 504  /50x.html;

@@ -7,12 +7,11 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./mysite.template:/tmp/mysite.template:ro
+      - ./nginx.conf.template:/tmp/nginx.conf.template:ro
       - ./webroot:/usr/share/nginx/html:ro
     environment:
-     - API_HOST=api
-     - API_PORT=3333
-    command: /bin/bash -c "envsubst < /tmp/mysite.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+     - API_FQDN=http://api:3333/
+    command: /bin/bash -c "envsubst < /tmp/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
   api:
     build:
       context: ../../golang/API/
