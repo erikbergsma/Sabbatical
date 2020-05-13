@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 	"github.com/fatih/structs"
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v7"
 	"strconv"
 	"time"
 	log "github.com/sirupsen/logrus"
