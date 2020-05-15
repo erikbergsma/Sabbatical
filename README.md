@@ -3,12 +3,12 @@
 
 so far:
  - CRUD API written in golang + redis as a DB
+ - API can run against an external Redis service, like AWS' Elasticache
  - API frontend in angularjs (under NGINX)
  - frontend, API and DB are seperate containerized services
  - docker-compose for local building/running/testing
  - github action for building && deploying to AWS ECS
- - tested to run against an external service, like AWS' Elasticache
-
+ 
 ## to see this project in action
 ```shell
 cd Sabbatical/src/web/frontend
