@@ -27,3 +27,5 @@ https://github.com/github/gitignore/blob/master/Go.gitignore
 
 #git
 https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration
+
+push
