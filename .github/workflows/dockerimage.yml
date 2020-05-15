@@ -14,6 +14,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     
+    - name: debug
+      working-directory: ${{ GITHUB_WORKSPACE }}
+      run: ls -lah .
+      
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -42,10 +46,7 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-    - name: debug
-      working-directory: $GITHUB_WORKSPACE
-      run: ls -lah
-      
+
     - name: Build, tag, and push frontend image to Amazon ECR
       id: build-frontend-image
       env:
