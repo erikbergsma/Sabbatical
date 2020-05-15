@@ -6,7 +6,7 @@ so far:
  - API frontend in angularjs (under NGINX)
  - frontend, API and DB are seperate containerized services
  - docker-compose for local building/running/testing
- - github action for building/deploying to AWS ECS
+ - github action for building && deploying to AWS ECS
  - tested to run against an external service, like AWS' Elasticache
 
 ## to see this project in action
