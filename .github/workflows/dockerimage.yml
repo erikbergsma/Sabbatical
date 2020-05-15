@@ -43,7 +43,7 @@ jobs:
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: debug
-      working-directory: ./src/golang/web/frontend/
+      working-directory: $GITHUB_WORKSPACE
       run: ls -lah
       
     - name: Build, tag, and push frontend image to Amazon ECR
