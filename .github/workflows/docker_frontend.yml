@@ -46,4 +46,5 @@ jobs:
         docker buildx build \
           --tag myawesomeimage \
           --platform linux/amd64,linux/arm/v7,linux/arm64  .
-        docker images ls
+        docker tag myawesomeimage $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
