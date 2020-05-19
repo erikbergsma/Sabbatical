@@ -44,8 +44,6 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
 
-        docker buildx build \
-          --output "type=image,push=false,name=myawesomeimage" \
+        docker buildx build --push \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
           --platform linux/amd64,linux/arm/v7,linux/arm64  .
-        docker tag myawesomeimage $ECR_REGISTRY/$ECR_REPOSITORY:latest
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
