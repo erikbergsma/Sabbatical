@@ -47,7 +47,7 @@ jobs:
         #multiplatform build and push
         docker buildx build --push \
           -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
-          --platform linux/amd64,linux/arm/v7,linux/arm64  
+          --platform linux/amd64,linux/arm/v7,linux/arm64 .
         
         docker tag $ECR_REGISTRY/$ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
