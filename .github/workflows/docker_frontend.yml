@@ -43,7 +43,8 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
 
-        docker buildx build --tag $ECR_REGISTRY/$ECR_REPOSITORY:buildx \
+        docker buildx build --push \
+          --tag $ECR_REGISTRY/$ECR_REPOSITORY:buildx \
           --platform linux/amd64,linux/arm/v7,linux/arm64  .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:buildx
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
