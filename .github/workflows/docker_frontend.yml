@@ -25,12 +25,13 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
       
-    - name: install buildx
+    - name: Set up Docker Buildx
       id: buildx
       uses: crazy-max/ghaction-docker-buildx@v1
       with:
-        version: latest
-    
+        buildx-version: latest
+        qemu-version: latest    
+
     - name: Build, tag, and push frontend image to Amazon ECR
       id: build-api-image
       env:
@@ -44,7 +45,7 @@ jobs:
         # be deployed to ECS.
 
         docker buildx build \
-          --tag myawesomeimage \
+          --output "type=image,push=false" \
+           --tag myawesomeimage \
           --platform linux/amd64,linux/arm/v7,linux/arm64  .
-        docker tag myawesomeimage $ECR_REGISTRY/$ECR_REPOSITORY:latest
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker images ls
