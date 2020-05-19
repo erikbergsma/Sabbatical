@@ -44,6 +44,7 @@ jobs:
         # be deployed to ECS.
 
         docker buildx build --push \
-          --tag $ECR_REGISTRY/$ECR_REPOSITORY:buildx \
+          --tag myawesomeimage \
           --platform linux/amd64,linux/arm/v7,linux/arm64  .
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker images ls
