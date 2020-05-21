@@ -3,11 +3,12 @@ name: Docker Image API
 on:
   push:
     branches: [ master ]
+    paths:
+    - 'src/golang/API/**'
+    - '.github/workflows/docker_api.yml'
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:

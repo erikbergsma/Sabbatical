@@ -3,6 +3,9 @@ name: Docker Image frontend
 on:
   push:
     branches: [ master ]
+    paths:
+    - 'src/web/frontend/**'
+    - '.github/workflows/docker_frontend.yml'
 
 jobs:
 
