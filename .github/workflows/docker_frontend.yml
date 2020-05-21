@@ -33,7 +33,7 @@ jobs:
         qemu-version: latest    
 
     - name: Build, tag, and push frontend image to Amazon ECR
-      id: build-api-image
+      id: build-frontend-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: sabbatical/frontend
