@@ -48,9 +48,11 @@ jobs:
         # be deployed to ECS.
 
         # multiplatform build and push
-        docker buildx build --push \
+        docker buildx build --load \
           -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
           --platform linux/amd64,linux/arm/v7 .
+
+        docker images
 
         # buildx does not add an image to the local docker
         docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
