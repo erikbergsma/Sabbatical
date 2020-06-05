@@ -9,6 +9,7 @@ so far:
  - docker-compose for local building/running/testing
  - github action for building each service to amd64 and arm/v7 containers
  - arm/v7 support so that everything can run on a Raspberry pi!
+ - tools to use letsencrypt and use/build a webhook server
 
 ## to see this project in action
 ```shell
