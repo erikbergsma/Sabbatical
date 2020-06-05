@@ -1,0 +1,14 @@
+workers: 1
+port: 8000
+# sslkeys dont work (on rbpi / arm) https://justpaste.it/63190
+#ssl_private_key: ../manage_certs/sslcerts/live/YOURDOMAINHERE/privkey.pem
+#ssl_cert_chain: ../manage_certs/sslcerts/live/YOURDOMAINHERE/fullchain.pem
+#ssl_private_key: ./localhost.key
+#ssl_cert_chain: ./localhost.crt 
+webhooks:
+  -
+    name: 'ls'
+    #command: 'whoami'
+    command: '/usr/local/bin/docker-compose pull && /usr/local/bin/docker-compose up'
+    cwd: '/home/pi/Sabbatical/src/web'
+    parallel_processes: 1

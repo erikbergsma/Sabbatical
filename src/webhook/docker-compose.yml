@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  webhook:
+    image: test/test:3
+    restart: always
+    volumes:
+      - ./webhook_server.yml:/etc/webhook_server.yml:ro
+      - /usr/local/bin/docker-compose:/tmp/docker-compose:ro
+      - ./docker-compose.yml:/tmp/docker-compose.yml:ro
+    ports:
+      - 8000:8000
+
+  hello:
+    image: hello-world
+

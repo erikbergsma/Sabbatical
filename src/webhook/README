@@ -1,0 +1,16 @@
+Description:
+Files for running a webhook server, so that a server can be triggered to pull new images, after a succesful build on Github Actions
+target server is a raspberrypi 2b for now
+
+code is from: https://github.com/Nukesor/webhook-server 
+
+**important** while the code compiles, and the executable runs, it crashes when adding ssl certificates
+both self-signed and Letsencrypt. And running a webserver/webhook without ssl is a no-no
+https://justpaste.it/63190
+
+Files:
+Dockerfile        : compile the src from this repo to an armv7/rasberrypi executable
+amd64\*		  : cross compile the src from this repo to an armv7/rasberrypi executable, from an amd64 machine			
+docker-compose.yml: [broken] run the webhook in a container, i have some issues with port forwarding and stopping/starting containers outside its own container
+webhookserver_arm : the executable that spins up a webhook server
+webhook_server.yml: instructions for the webhook server
