@@ -5,4 +5,4 @@ docker ps -a
 
 now: look for the container id from step 2
 
-extract the binary with: docker cp /tmp/webhookserver .
+extract the binary with: docker cp CONTAINERID:/tmp/webhookserver .
