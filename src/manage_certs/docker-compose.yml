@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  certbot:
+    image: tobi312/rpi-certbot:latest
+    command: certonly --keep-until-expiring --verbose --standalone --email ${DOMAINEMAIL} --agree-tos --no-eff-email -d ${DOMAINURL}
+    volumes:
+      - ./sslcerts:/etc/letsencrypt
+    ports:
+      - 500:80
+
+  dhparam:
+    image: nginx
+    volumes: 
+      - ./sslcerts:/etc/nginx/dhparam
+    command: /bin/sh -c "test ! -f /etc/nginx/dhparam/dhparam-2048.pem && openssl dhparam -out /etc/nginx/dhparam/dhparam-2048.pem 2048"
