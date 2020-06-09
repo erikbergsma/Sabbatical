@@ -3,8 +3,8 @@
 
 so far:
  - Basic Rest/CRUD API written in golang
- - API frontend in angularjs (under NGINX)
  - API can run against a local redis (container) or against an external Redis service, like AWS' Elasticache
+ - API frontend in angularjs (under NGINX)
  - Frontend, API and DB are seperate containerized services
  - docker-compose for local building/running/testing
  - github action for building each service to amd64 and arm/v7 containers
