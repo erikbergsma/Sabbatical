@@ -2,10 +2,10 @@
  some stuff i want to explore, post or mid sabbatical
 
 so far:
- - CRUD API written in golang, Redis as a DB
+ - Basic Rest/CRUD API written in golang
  - API frontend in angularjs (under NGINX)
- - API can run against an external Redis service, like AWS' Elasticache
- - frontend, API and DB are seperate containerized services
+ - API can run against a local redis (container) or against an external Redis service, like AWS' Elasticache
+ - Frontend, API and DB are seperate containerized services
  - docker-compose for local building/running/testing
  - github action for building each service to amd64 and arm/v7 containers
  - arm/v7 support so that everything can run on a Raspberry pi!
