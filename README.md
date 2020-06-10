@@ -1,5 +1,9 @@
 # Sabbatical
  some stuff i want to explore, post or mid sabbatical
+ 
+ ** please note: ** this is not to aimed to be a feature complete / production ready product at any point,
+ but rather a personal playground for microservices. thereby things like user input validation,
+ is not going to get implemented in the API
 
 so far:
  - Basic Rest/CRUD API written in golang
