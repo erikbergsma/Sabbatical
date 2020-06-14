@@ -123,9 +123,12 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func listHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", http.StatusBadRequest)
-	}
+	//with the new gorilla/mux router, this does not work
+	//and /or the Method is set to HEAD..... ?
+
+	//if r.Method != "GET" {
+	//	http.Error(w, "Method not allowed", http.StatusBadRequest)
+	//}
 
 	allcustomers := getCustomersIndex()
 
