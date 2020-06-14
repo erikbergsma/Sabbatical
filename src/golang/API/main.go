@@ -15,8 +15,10 @@ func init(){
 }
 
 func main() {
+	// this is a golang router that provides versioned endpoints,
+	// and adds in all the API's subpaths :)
 	var router = setup_version_1()
 
-	log.Info("all systems green, launching API  on port 33335")
+	log.Info("all systems green, launching API  on port 3333")
 	http.ListenAndServe(":3333", router)
 }
