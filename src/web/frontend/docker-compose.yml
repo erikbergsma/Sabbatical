@@ -10,7 +10,7 @@ services:
       - ./nginx.conf.template:/tmp/nginx.conf.template:ro
       - ./webroot:/usr/share/nginx/html:ro
     environment:
-     - API_FQDN=http://api:3333/
+     - API_FQDN=http://api:3333/v1/
     command: /bin/bash -c "envsubst < /tmp/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
   api:
     build:
