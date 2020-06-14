@@ -6,7 +6,7 @@
  is not going to get implemented in the API
 
 so far:
- - Basic Rest/CRUD API written in golang
+ - Basic versioned Rest/CRUD API written in golang
  - API can run against a local redis (container) or against an external Redis service, like AWS' Elasticache
  - API frontend in angularjs (under NGINX)
  - Frontend, API and DB are seperate containerized services
