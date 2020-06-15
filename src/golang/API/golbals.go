@@ -16,6 +16,6 @@ const(
 	redisSetKeyName		= "customers"
 	// customers will be stored under customer:id => foo
 	redisHashKeyRoot	= "customer"
-	// customer id's will be generated server side based
+	// customer id's will be generated serverside
 	redisIdKeyName		= "lastCustomerId"
 )

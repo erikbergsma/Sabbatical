@@ -68,9 +68,9 @@ func setupRedisConnection() error {
 	}
 }
 
-func serverToRedis(server Server) error {
-	ID := strconv.FormatInt(server.ID, 10)
-	m := structs.Map(server)
+func customerToRedis(customer Customer) error {
+	ID := strconv.FormatInt(customer.ID, 10)
+	m := structs.Map(customer)
 	keyname := strings.Join([]string{redisHashKeyRoot, ID}, ":")
 
 	retries := 5
@@ -110,21 +110,21 @@ func populate() error {
 
 	id := incrGlobalCustomerId()
 
-	server1 := Server{
+	customer1 := Customer{
 		Name:    "gopher3",
 		ID:      id,
 		Enabled: true,
 	}
-	serverToRedis(server1)
+	customerToRedis(customer1)
 
 	id = incrGlobalCustomerId()
 
-	server2 := Server{
+	customer2 := Customer{
 		Name:    "gopher6",
 		ID:      id,
 		Enabled: false,
 	}
-	serverToRedis(server2)
+	customerToRedis(customer2)
 
 	return nil
 }
@@ -143,8 +143,8 @@ func getCustomersIndex() []string{
 	return allcustomers
 }
 
-func getCustomerByKeyname(customer string) Server {
-	val, err := client.HGetAll(customer).Result()
+func getCustomerByKeyname(customerName string) Customer {
+	val, err := client.HGetAll(customerName).Result()
 
 	if err == redis.Nil {
 		log.Warning("key does not exist")
@@ -155,22 +155,22 @@ func getCustomerByKeyname(customer string) Server {
 		log.Debug("key", val)
 	}
 
-	var server Server
-	server.Name = val["Name"]
+	var customer Customer
+	customer.Name = val["Name"]
 
 	//this should be gracefull?
-	server.Enabled, err = strconv.ParseBool(val["Enabled"])
+	customer.Enabled, err = strconv.ParseBool(val["Enabled"])
 	if err != nil {
 		log.Error(err)
 	}
 
 	//this should be gracefull?
-	server.ID, err = strconv.ParseInt(val["ID"], 10, 64)
+	customer.ID, err = strconv.ParseInt(val["ID"], 10, 64)
 	if err != nil {
 		log.Error(err)
 	}
 
-	return server
+	return customer
 }
 
 func incrGlobalCustomerId() int64 {

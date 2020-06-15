@@ -1,6 +1,6 @@
 package main
 
-type Server struct {
+type Customer struct {
 	Name        string
 	ID          int64
 	Enabled     bool    `json:"Enabled,omitempty"`

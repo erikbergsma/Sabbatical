@@ -23,8 +23,8 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	var newserver Server
-	err = json.Unmarshal(body, &newserver)
+	var newcustomer Customer
+	err = json.Unmarshal(body, &newcustomer)
 
 	if err != nil {
 			log.Error(err.Error())
@@ -32,13 +32,13 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//we create the ID serverside
-	newserver.ID		= incrGlobalCustomerId()
+	newcustomer.ID		= incrGlobalCustomerId()
 
 	// Save to database
-	serverToRedis(newserver)
+	customerToRedis(newcustomer)
 
 	//return to the client so he can fetch the ID / check
-	js, err := json.Marshal(newserver)
+	js, err := json.Marshal(newcustomer)
 	if err != nil {
 		log.Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -60,23 +60,23 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	var dumpserver Server
-	err = json.Unmarshal(body, &dumpserver)
+	var dumpcustomer Customer
+	err = json.Unmarshal(body, &dumpcustomer)
 
 	if err != nil {
 			log.Error(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	keyname := strings.Join([]string{redisHashKeyRoot, strconv.FormatInt(dumpserver.ID, 10)}, ":")
-	server := getCustomerByKeyname(keyname)
+	keyname := strings.Join([]string{redisHashKeyRoot, strconv.FormatInt(dumpcustomer.ID, 10)}, ":")
+	customer := getCustomerByKeyname(keyname)
 
 	// needs checking which field needs updating?
-	server.Name					= dumpserver.Name
-  server.Enabled	    = dumpserver.Enabled
+	customer.Name					= dumpcustomer.Name
+  customer.Enabled	    = dumpcustomer.Enabled
 
 	// Save to database
-	serverToRedis(server)
+	customerToRedis(customer)
 
 	http.Redirect(w, r, "/", 301)
 }
@@ -92,15 +92,15 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	var dumpserver Server
-	err = json.Unmarshal(body, &dumpserver)
+	var dumpcustomer Customer
+	err = json.Unmarshal(body, &dumpcustomer)
 
 	if err != nil {
 			log.Error(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	keyname := strings.Join([]string{redisHashKeyRoot, strconv.FormatInt(dumpserver.ID, 10)}, ":")
+	keyname := strings.Join([]string{redisHashKeyRoot, strconv.FormatInt(dumpcustomer.ID, 10)}, ":")
 	log.Debug("deleting: ", keyname)
 
 	// delete the redis hash (customer object)
@@ -132,13 +132,13 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 
 	allcustomers := getCustomersIndex()
 
-	var customers []Server
+	var customers []Customer
 	for _, customer := range allcustomers {
-		server := getCustomerByKeyname(customer)
-		customers = append(customers, server)
+		customer := getCustomerByKeyname(customer)
+		customers = append(customers, customer)
 	}
 
-	w.Header().Set("Server", "A Go Web Server")
+	w.Header().Set("Customer", "A Go Web Customer")
 
 	js, err := json.Marshal(customers)
 	if err != nil {
